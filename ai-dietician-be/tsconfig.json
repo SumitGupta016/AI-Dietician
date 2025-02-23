@@ -15,9 +15,10 @@
   },
   "include": [
     "src/**/*"
-  ],
+, "migrations"  ],
   "exclude": [
     "node_modules",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "migrations"
   ]
 }

@@ -1,30 +1,31 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule, TypeOrmModuleAsyncOptions } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { SequelizeModule } from '@nestjs/sequelize';
 import { AuthModule } from './../auth';
 import { CommonModule } from './../common';
-import { ConfigModule, ConfigService } from './../config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { User } from 'models/user.model';
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
+    ConfigModule.forRoot({ isGlobal: true }),
+    SequelizeModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        return {
-          type: configService.get('DB_TYPE'),
-          host: configService.get('DB_HOST'),
-          port: configService.get('DB_PORT'),
-          username: configService.get('DB_USERNAME'),
-          password: configService.get('DB_PASSWORD'),
-          database: configService.get('DB_DATABASE'),
-          entities: [__dirname + './../**/**.entity{.ts,.js}'],
-          synchronize: configService.get('DB_SYNC') === 'true',
-        } as TypeOrmModuleAsyncOptions;
-      },
+      useFactory: (configService: ConfigService) => ({
+        dialect: configService.get<'mysql' | 'postgres'>('DB_TYPE'),
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_DATABASE'),
+        models: [User],
+        autoLoadModels: true,
+        synchronize: configService.get<boolean>('DB_SYNC'),
+        logging: configService.get<boolean>('DB_LOGGING') || false,
+      }),
     }),
-    ConfigModule,
     AuthModule,
     CommonModule,
   ],
