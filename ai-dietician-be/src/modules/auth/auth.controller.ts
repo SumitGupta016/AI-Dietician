@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService, LoginPayload, RegisterPayload } from './';
 import { CurrentUser } from './../common/decorator/current-user.decorator';
-import { User, UsersService } from './../user';
+import { User } from 'models/user.model';
 
 @Controller('api/auth')
 @ApiTags('authentication')
