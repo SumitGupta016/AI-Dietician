@@ -1,26 +1,43 @@
-# dependencies
-node_modules/
-
-# IDE
+# compiled output
+/dist
+/node_modules
+.env
+/docker
 /.vscode
 
-# misc
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*d
+yarn-error.log*
+lerna-debug.log*
+
+# OS
 .DS_Store
 lerna-debug.log
 npm-debug.log
 yarn-error.log
 **/npm-debug.log
 
-# environment
-.env
-
-# build
-/dist
-
-# tests
-/test
+# Tests
 /coverage
 /.nyc_output
 build/config\.gypi
 
-sqlite-example.sql
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json

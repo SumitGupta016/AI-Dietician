@@ -1,16 +1,17 @@
-import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { useContainer } from 'class-validator';
-import { TrimStringsPipe } from './modules/common/transformer/trim-strings.pipe';
-import { AppModule } from './modules/main/app.module';
-import { setupSwagger } from './swagger';
+import { AppModule } from './app.module';
+import { LoggerService } from './core/logger';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  setupSwagger(app);
-  app.enableCors();
-  app.useGlobalPipes(new TrimStringsPipe(), new ValidationPipe());
-  useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  await app.listen(3000);
+  const configService = app.get<ConfigService>(ConfigService);
+  const servicePort = configService.get<number>('port') || 3000;
+  await app.listen(servicePort).then(async () => {
+    const logger = await app.resolve<LoggerService>(LoggerService);
+    logger.info(`Listening on port ${servicePort}`);
+  });
 }
-bootstrap();
+bootstrap()
+  .then(() => {})
+  .catch(() => {});

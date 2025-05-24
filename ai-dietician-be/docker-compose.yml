@@ -1,41 +1,91 @@
-version: "2"
-services:
-  nest:
-    build: .
-    container_name: nest
-    depends_on:
-      - db
-    volumes:
-      - ./src:/app/src
-      - .env:/app/.env
+version: '3.8'
 
-  nginx:
+services:
+  ai-dietician-postgres-db:
+    container_name: postgres
+    image: postgres:15.0
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      PGUSER: ${DB_USER}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
+      timeout: 20s
+      retries: 10
+    ports:
+      - '${DB_PORT}:5432'
+    networks:
+      - ai-dietician-back-app
+    volumes:
+      - './docker/postgres_data:/var/lib/postgresql/data'
+
+  create-database:
+    container_name: create-postgres-database
     build:
       context: .
-      dockerfile: Dockerfile-nginx
-    container_name: nest-nginx
+      dockerfile: pgtools.Dockerfile
     depends_on:
-      - nest
+      ai-dietician-postgres-db:
+        condition: service_healthy
     environment:
-      - NGINX_SERVER_NAME=localhost
-      - NEST_HOST=nest
-      - NEST_PORT=3000
-      - NGINX_MAX_BODY=100M
-    ports:
-      - 80:80
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+      PGUSER: ${DB_USER}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+    networks:
+      - ai-dietician-back-app
 
-  db:
-    image: mariadb:10
-    container_name: nest-db
-    environment:
-      MYSQL_DATABASE: nest
-      MYSQL_USER: nest
-      MYSQL_PASSWORD: nest
-      MYSQL_ROOT_PASSWORD: root
+  ai-dietician-back-app:
+    container_name: ai-dietician-back-app
+    build:
+      context: .
+      dockerfile: app.Dockerfile
     ports:
-      - 3306:3306
+      - "${APP_PORT}:3000"
+    env_file:
+      - .env
+    depends_on:
+      ai-dietician-postgres-db:
+        condition: service_healthy
+      ai-dietician-migrate-db:
+        condition: service_completed_successfully
+    networks:
+      - ai-dietician-back-app
     volumes:
-      - mariadbdata:/var/lib/mysql
+      - ./src:/usr/src/app/src
+
+  ai-dietician-migrate-db:
+    container_name: ai-dietician-migrate-db
+    build:
+      context: .
+      dockerfile: migration.Dockerfile
+    depends_on:
+      ai-dietician-postgres-db:
+        condition: service_healthy
+      create-database:
+        condition: service_completed_successfully
+    env_file:
+      - .env
+
+  ai-dietician-seed-db:
+    container_name: ai-dietician-seed-db
+    build:
+      context: .
+      dockerfile: seeder.Dockerfile
+    depends_on:
+      ai-dietician-migrate-db:
+        condition: service_completed_successfully
+    env_file:
+      - .env
+    volumes:
+      - seed-data:/data
+
+networks:
+  ai-dietician-back-app:
+    driver: bridge
 
 volumes:
-  mariadbdata:
+  seed-data:
+    driver: local
