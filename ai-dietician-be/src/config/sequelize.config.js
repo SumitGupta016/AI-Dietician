@@ -8,7 +8,7 @@ const sequelizeConfig = {
   logging: false,
   password: process.env.DB_PASSWORD,
   port: parseInt(process.env.DB_PORT || '5436', 10),
-  username: process.env.DB_USER,
+  username: process.env.DB_USERNAME,
   dialectOptions: {},
 };
 

@@ -7,6 +7,7 @@ import { validate } from './config/env.validation';
 import { LoggerModule } from './core/logger';
 import { ModelsModule } from './models';
 import { RepositoryModule } from './repository';
+import { HealthModule } from './routes/health/health.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { RepositoryModule } from './repository';
     DbModule,
     ModelsModule,
     RepositoryModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [],
