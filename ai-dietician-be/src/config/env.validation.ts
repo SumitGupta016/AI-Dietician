@@ -23,6 +23,9 @@ class EnvironmentVariables {
 
   @IsString()
   DB_PASSWORD: string;
+
+  @IsString()
+  DB_USERNAME: string;
 }
 
 export function validate(config: Record<string, unknown>) {
