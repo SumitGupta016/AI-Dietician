@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CalculateBmiRequestDto } from '../dtos/calculate-bmi-req.dto';
-import { CalculateBmiResponseDto } from '../dtos/calculate-bmi-res.dto';
-import { CalculateNutritionRequestDto } from '../dtos/calculate-nutrition.req.dto';
-import { CalculateNutritionResponseDto } from '../dtos/calculate-nutrition.res.dto';
-import { BmiCategory } from '../enums/category.enum';
+import { CalculateBmiRequestDto } from './dtos/calculate-bmi-req.dto';
+import { CalculateBmiResponseDto } from './dtos/calculate-bmi-res.dto';
+import { CalculateNutritionRequestDto } from './dtos/calculate-nutrition.req.dto';
+import { CalculateNutritionResponseDto } from './dtos/calculate-nutrition.res.dto';
+import { BmiCategory } from './enums/category.enum';
 
 @Injectable()
 export class HealthService {

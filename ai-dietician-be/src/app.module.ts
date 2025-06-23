@@ -8,6 +8,7 @@ import { LoggerModule } from './core/logger';
 import { ModelsModule } from './models';
 import { RepositoryModule } from './repository';
 import { HealthModule } from './routes/health/health.module';
+import { OpenRouterModule } from './routes/openrouter/openrouter.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { HealthModule } from './routes/health/health.module';
     ModelsModule,
     RepositoryModule,
     HealthModule,
+    OpenRouterModule,
   ],
   controllers: [AppController],
   providers: [],
