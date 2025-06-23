@@ -1,10 +1,10 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { CalculateBmiRequestDto } from '../dtos/calculate-bmi-req.dto';
-import { CalculateBmiResponseDto } from '../dtos/calculate-bmi-res.dto';
-import { CalculateNutritionRequestDto } from '../dtos/calculate-nutrition.req.dto';
-import { CalculateNutritionResponseDto } from '../dtos/calculate-nutrition.res.dto';
+import { CalculateBmiRequestDto } from './dtos/calculate-bmi-req.dto';
+import { CalculateBmiResponseDto } from './dtos/calculate-bmi-res.dto';
+import { CalculateNutritionRequestDto } from './dtos/calculate-nutrition.req.dto';
+import { CalculateNutritionResponseDto } from './dtos/calculate-nutrition.res.dto';
 import { HealthService } from './health.service';
 
 @ApiTags('Health')

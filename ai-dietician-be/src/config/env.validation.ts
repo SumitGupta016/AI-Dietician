@@ -26,6 +26,12 @@ class EnvironmentVariables {
 
   @IsString()
   DB_USERNAME: string;
+
+  @IsString()
+  OPENROUTER_API_KEY: string;
+
+  @IsString()
+  OPENROUTER_API_URL: string;
 }
 
 export function validate(config: Record<string, unknown>) {
